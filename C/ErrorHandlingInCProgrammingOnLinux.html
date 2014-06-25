@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<!--[if IE 7]>
+<html class="ie ie7" lang="en-US" prefix="og: http://ogp.me/ns#">
+<![endif]-->
+<!--[if IE 8]>
+<html class="ie ie8" lang="en-US" prefix="og: http://ogp.me/ns#">
+<![endif]-->
+<!--[if !(IE 7) | !(IE 8)  ]><!-->
+<html lang="en-US" prefix="og: http://ogp.me/ns#">
+<!--<![endif]-->
+<head>
+<meta name="google-site-verification" content="eLmO8oSMijdc5HXBVQWLGsRbYiIQYqcftEHjp0DBCRg" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width" />
+<title>Error handling in C programming on Linux - MyLinuxBook</title>
+<link rel="profile" href="http://gmpg.org/xfn/11" />
+<link rel="pingback" href="http://mylinuxbook.com/xmlrpc.php" />
+<!--[if lt IE 9]>
+<script src="http://mylinuxbook.com/wp-content/themes/iconic-one/js/html5.js" type="text/javascript"></script>
+<![endif]-->
+
+<!-- This site is optimized with the Yoast WordPress SEO plugin v1.4.3 - http://yoast.com/wordpress/seo/ -->
+<meta name="description" content="This article explains the techniques and importance of error handling in C. Each technique is supported by a detailed example in C language."/>
+<link rel="canonical" href="http://mylinuxbook.com/error-handling-in-c-programming-on-linux/" />
+<meta property='og:locale' content='en_US'/>
+<meta property='og:title' content='Error handling in C programming on Linux - MyLinuxBook'/>
+<meta property='og:description' content='This article explains the techniques and importance of error handling in C. Each technique is supported by a detailed example in C language.'/>
+<meta property='og:url' content='http://mylinuxbook.com/error-handling-in-c-programming-on-linux/'/>
+<meta property='og:site_name' content='MyLinuxBook'/>
+<meta property='og:type' content='article'/>
+<!-- / Yoast WordPress SEO plugin. -->
+
+<link rel="alternate" type="application/rss+xml" title="MyLinuxBook &raquo; Feed" href="http://mylinuxbook.com/feed/" />
+<link rel="alternate" type="application/rss+xml" title="MyLinuxBook &raquo; Comments Feed" href="http://mylinuxbook.com/comments/feed/" />
+
+            <script type="text/javascript">//<![CDATA[
+            // Google Analytics for WordPress by Yoast v4.3.2 | http://yoast.com/wordpress/google-analytics/
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-36586508-1']);
+				            _gaq.push(['_trackPageview']);
+            (function () {
+                var ga = document.createElement('script');
+                ga.type = 'text/javascript';
+                ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(ga, s);
+            })();
+            //]]></script>
+			<link rel="alternate" type="application/rss+xml" title="MyLinuxBook &raquo; Error handling in C programming on Linux Comments Feed" href="http://mylinuxbook.com/error-handling-in-c-programming-on-linux/feed/" />
+<link rel='stylesheet' id='validate-engine-css-css'  href='http://mylinuxbook.com/wp-content/plugins/wysija-newsletters/css/validationEngine.jquery.css?ver=2.4.2' type='text/css' media='all' />
+<link rel='stylesheet' id='farbtastic-css'  href='http://mylinuxbook.com/wp-admin/css/farbtastic.css?ver=1.3u1' type='text/css' media='all' />
+<link rel='stylesheet' id='spu-css-css'  href='http://mylinuxbook.com/wp-content/plugins/social-popup/spu.css?ver=3.8.1' type='text/css' media='all' />
+<link rel='stylesheet' id='jetpack-widgets-css'  href='http://mylinuxbook.com/wp-content/plugins/jetpack/modules/widgets/widgets.css?ver=20121003' type='text/css' media='all' />
+<link rel='stylesheet' id='themonic-fonts-css'  href='http://fonts.googleapis.com/css?family=Ubuntu:400,700&#038;subset=latin,latin-ext' type='text/css' media='all' />
+<link rel='stylesheet' id='themonic-style-css'  href='http://mylinuxbook.com/wp-content/themes/iconic-one-child/style.css?ver=3.8.1' type='text/css' media='all' />
+<link rel='stylesheet' id='custom-style-css'  href='http://mylinuxbook.com/wp-content/themes/iconic-one/custom.css?ver=3.8.1' type='text/css' media='all' />
+<!--[if lt IE 9]>
+<link rel='stylesheet' id='themonic-ie-css'  href='http://mylinuxbook.com/wp-content/themes/iconic-one/css/ie.css?ver=20130305' type='text/css' media='all' />
+<![endif]-->
+<link rel='stylesheet' id='sharedaddy-css'  href='http://mylinuxbook.com/wp-content/plugins/jetpack/modules/sharedaddy/sharing.css?ver=2.2' type='text/css' media='all' />
+<script type='text/javascript' src='http://mylinuxbook.com/wp-includes/js/jquery/jquery.js?ver=1.10.2'></script>
+<script type='text/javascript' src='http://mylinuxbook.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.2.1'></script>
+<script type='text/javascript' src='http://connect.facebook.net/en_US/all.js?ver=3.8.1#xfbml=1'></script>
+<script type='text/javascript' src='http://platform.twitter.com/widgets.js?ver=3.8.1'></script>
+<script type='text/javascript' src='https://apis.google.com/js/plusone.js?ver=3.8.1'></script>
+<script type='text/javascript' src='http://mylinuxbook.com/wp-content/plugins/social-popup/spu.js?ver=3.8.1'></script>
+<script type='text/javascript' src='http://mylinuxbook.com/wp-includes/js/comment-reply.min.js?ver=3.8.1'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://mylinuxbook.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://mylinuxbook.com/wp-includes/wlwmanifest.xml" /> 
+<meta name="generator" content="WordPress 3.8.1" />
+<link rel='shortlink' href='http://wp.me/p2HDt5-2f' />
+<link rel="stylesheet" type="text/css" href="http://mylinuxbook.com/wp-content/plugins/getsocial/lib/getsocialstyles.php?color=EAEAF4&border=D9D9ED&w=73&strip=dark&prehide=no&rc=yes&stralign=right" />
+<script type="text/javascript">var $opt_initial_top = 236;var $opt_scrolled_top = 20;var $opt_browser_width = 1140;var $opt_box_left = 97;</script><script type="text/javascript" src="http://mylinuxbook.com/wp-content/plugins/getsocial/lib/getsocial.js"></script>					<div class="getsocial"><div class="sharebutton"><a href="http://twitter.com/share" class="twitter-share-button" data-count="vertical" data-via="" data-related="">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script></div><div class="sharebutton"><div id="fb-root"></div><script>(function(d, s, id) {  var js, fjs = d.getElementsByTagName(s)[0];  if (d.getElementById(id)) return;  js = d.createElement(s); js.id = id;  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";  fjs.parentNode.insertBefore(js, fjs);}(document, 'script', 'facebook-jssdk'));</script><div class="fb-like" data-href="http://mylinuxbook.com/error-handling-in-c-programming-on-linux/" data-send="false" data-layout="box_count" data-width="63" data-show-faces="false"></div></div><div class="sharebutton"><script type="text/javascript" src="http://apis.google.com/js/plusone.js"></script><g:plusone size="tall"  href="http://mylinuxbook.com/error-handling-in-c-programming-on-linux/"></g:plusone></div><div class="sharebutton"><su:badge layout="5"></su:badge> <script type="text/javascript"> (function() {      var li = document.createElement('script'); li.type = 'text/javascript'; li.async = true;     li.src = window.location.protocol + '//platform.stumbleupon.com/1/widgets.js';      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(li, s); })(); </script></div><div class="sharebutton"><div class="sharebutton"><script type="text/javascript" src="http://www.reddit.com/static/button/button2.js"></script></div></div></div><style type="text/css" id="custom-background-css">
+body.custom-background { background-color: #e8e8e8; }
+</style>
+<link type="text/css" media="screen" rel="stylesheet" href="http://mylinuxbook.com/wp-content/plugins/fbf-facebook-page-feed-widget/fbf_facebook_page_feed.css" />
+		<link rel="stylesheet" id="custom-css-css" type="text/css" href="http://mylinuxbook.com/?custom-css=1&#038;csblog=1&#038;cscache=6&#038;csrev=6" />
+		<script?src=?//pagead2.googlesyndication.com/pagead/js/google_top_exp.js?></script>
+</head>
+<body class="single single-post postid-139 single-format-standard custom-background custom-font-enabled">
+<div id="page" class="hfeed site">
+	<header id="masthead" class="site-header" role="banner">
+					
+		<div class="themonic-logo">
+        <a href="http://mylinuxbook.com/" title="MyLinuxBook" rel="home"><img src="http://mylinuxbook.com/wp-content/uploads/2013/10/cooltext1199300534.png" alt="MyLinuxBook"></a>
+		</div>
+
+<script id="mNCC" language="javascript">  medianet_width='468';  medianet_height= '60';  medianet_crid='657887044';  </script>  <script id="mNSC" src="http://contextual.media.net/nmedianet.js?cid=8CUV583K1" language="javascript"></script> 
+
+		
+
+		
+		<nav id="site-navigation" class="themonic-nav" role="navigation">
+			<a class="assistive-text" href="#content" title="Skip to content">Skip to content</a>
+			<div class="nav-menu"><ul><li ><a href="http://mylinuxbook.com/">Home</a></li><li class="page_item page-item-34"><a href="http://mylinuxbook.com/about-mylinuxbook/">About MyLinuxBook</a></li><li class="page_item page-item-31"><a href="http://mylinuxbook.com/feedback/">Contact us</a></li><li class="page_item page-item-1185"><a href="http://mylinuxbook.com/privacy-policy/">Privacy Policy</a></li><li class="page_item page-item-2913"><a href="http://mylinuxbook.com/terms-of-service/">Terms Of Service</a></li><li class="page_item page-item-3711"><a href="http://mylinuxbook.com/testimonials/">Testimonials</a></li></ul></div>
+		</nav><!-- #site-navigation -->
+
+		<div class="clear"></div>
+
+	</header><!-- #masthead -->
+
+	<div id="main" class="wrapper">	<div id="primary" class="site-content">
+		<div id="content" role="main">
+
+							
+	<article id="post-139" class="post-139 post type-post status-publish format-standard hentry category-c-cpp-prog category-linux-devel category-user-space-devel tag-c-language-error-handling tag-errno tag-error-handling tag-error-handling-in-c tag-linux-errno-variable tag-linux-programming tag-perror tag-perror-function tag-strerror tag-strerror-function">
+				<header class="entry-header">
+						<h1 class="entry-title">Error handling in C programming on Linux</h1>
+									
+	<div class="below-title-meta">
+		<div class="adt">
+		By        <span class="author">
+         <a href="http://mylinuxbook.com/author/linuxuser/" title="Posts by LinuxUser" rel="author">LinuxUser</a>        </span>
+         <span class="meta-sep">|</span> 
+         08/09/2012 
+         </div>
+		 <div class="adt-comment">
+		 <a class="link-comments" href="http://mylinuxbook.com/error-handling-in-c-programming-on-linux/#comments">0 Comment</a></span> 
+         </div>       
+     </div><!-- below title meta end -->
+			
+						
+			</header><!-- .entry-header -->
+
+				<div class="entry-content">
+			<div id="getsocialmain"><!-- SimpleReach Slide Plugin Version: 0.7.6 -->
+<script type='text/javascript' id='simplereach-slide-tag'>
+    __reach_config = {
+      pid: '50f7b7c5642b243b26000006',
+      title: 'Error handling in C programming on Linux',
+      tags: ["C language error handling","errno","error handling","Error handling in C","Linux errno variable","Linux programming","perror","perror function","strerror","strerror function"],
+      authors: ["LinuxUser"],
+      channels: ["c-cpp-prog","linux-devel","user-space-devel"],
+      slide_logo: false,
+      slide_active: true,
+      date: '2012-09-07 18:50:36',
+      url: 'http://mylinuxbook.com/error-handling-in-c-programming-on-linux/',
+      header: 'RECOMMENDED FOR YOU'
+    };
+    var content = document.getElementById('simplereach-slide-tag').parentNode, loc;
+    if (content.className){ loc = '.' + content.className; }
+    if (content.id){ loc = '#' + content.id; }
+    __reach_config.loc = loc || content;
+    (function(){
+    var s = document.createElement('script');
+      s.async = true;
+      s.type = 'text/javascript';
+      s.src = document.location.protocol + '//d8rk54i4mohrb.cloudfront.net/js/slide.js';
+      __reach_config.css = '';
+      var tg = document.getElementsByTagName('head')[0];
+      if (!tg) {tg = document.getElementsByTagName('body')[0];}
+      if (tg) {tg.appendChild(s);}
+    })();
+</script>
+<p>While writing C code for Linux programs, it&#8217;s very important to put in place proper error handling mechanism as it saves precious time while debugging any problem with the same code. Mostly developers write code that contains broken error handling and this causes them to invest hours while debugging a complex code. In this example we will discuss in detail how to perform error handling in C.<br />
+<span id="more-139"></span></p>
+<h2><span style="text-decoration: underline;">Error handling in C</span></h2>
+<p>One of the my personal experience was when I was debugging a problem in a code from a vendor. The code was crashing somewhere under a particular scenario. The code was running on an embedded device and I had no debugger to use. All I was left with was to add debug prints in the code and look out for logs. I spent 2 hours debugging this way and finally reached up to a point where the return address from a function call was not being checked for NULL while it was actually coming out to be NULL under a particular scenario. And since the same pointer (holding the NULL address for this case) was being used in the next line, so there was a crash at that point. Now you can easily imagine how small the problem was but lack of proper error handling made it a nightmare for me to debug.</p>
+<p>In this article, we will discuss some very basic error handling that can be put in place while developing Linux programs in C language.</p>
+<h3>Check the return type</h3>
+<p>Return types from functions are of utmost importance. These return types describe how the function executed. Whether it passed, failed or some thing else happened. Especially in case of a function returning an address, it becomes mandatory to check whether an address was returned or a NULL was returned. Otherwise this could lead to crashes that become nightmare to debug. Usually Linux system calls return -1 on failure but that&#8217;s not true for all. So one should be aware of the return types of a function and should handle these return types accordingly. A sample error handling check for a function could be something like :</p>
+<pre>...
+...
+...
+char *ptr = NULL;
+ptr = some_function_returning_an_address();
+if(NULL == ptr)
+{
+    /**
+      Handle the error properly here.
+      Log a message here or increment 
+      a counter or whatever. If this 
+      error is critical then return 
+      from here.
+     **/
+}
+...
+...
+...</pre>
+<h3>Use the errno variable</h3>
+<p>The errno variable is a global variable that most of the Linux system calls (and some library functions) use to indicate an error by setting its value to a positive number. A check on the value of this variable strengthens the error handling in code. To better understand its usage, consider the following example :</p>
+<pre>#include&lt;stdio.h&gt;
+#include&lt;errno.h&gt;
+
+int main(void)
+{
+    FILE *fd = NULL;
+
+    // Reset errno to zero before calling fopen().
+    errno = 0;
+
+    // Lets open a file that does not exist   
+    fd = fopen("Linux.txt","r");
+    if(errno || (NULL == fd))
+    {
+        printf("\n fopen() failed\n");
+    }
+
+    return 0;
+}</pre>
+<p>So we see that we used the function fopen() and checked the errno variable after calling it. If errno comes out to be any non zero value then this means that fopen failed. A point worth noting here is about initializing errno with zero before calling to a function that sets it. It&#8217;s always done because if a call to a function A sets errno then it&#8217;s not always ensured that the next call to a function B would reset it to zero in a case where call to function B succeeds. So in such a case, the errno variable would still be holding a non zero value (from the failure of function A) and could be misinterpreted as a result of failure of function B. So it is always advisable to initialize errno to zero before any function call that sets it.</p>
+<p>Please note that errno variable is thread safe ie it is safe to use this variable in a multi threaded environment.</p>
+<h3>The strerror() and perror() functions</h3>
+<p>After going through previous section (where we explained about errno variable), one may ask as to what the potential advantage of using errno variable when the return type is capable of the same thing. Well, the question is valid one, so lets now discuss the functions strerror() and perror() without which the usage of errno variable is not complete.</p>
+<p>Whenever a function fails and sets the errno variable then what we see is a non zero value of errno. What if you are provided with a function that translates this error code into a human readable string? Yes, you guessed it right. The function strerror() and perror() do the same. Lets understand them one by one.</p>
+<p>Here is the prototype of strerror() function from the man page :</p>
+<blockquote><p>#include &lt;string.h&gt;<br />
+char *strerror(int errnum);</p>
+<p>The strerror() function returns a pointer to a string that describes the error code passed in the argument errnum. This string must not be modified by the application, but may be modified by a subsequent call to perror(3) or strerror(). No library function will modify this string.</p></blockquote>
+<p>So we see that this function accepts the errno value and returns pointer to a string that provides description on errno value in human readable form. Here is an example of this function :</p>
+<pre>#include&lt;stdio.h&gt;
+#include&lt;errno.h&gt;
+#include&lt;string.h&gt;
+
+int main(void)
+{
+    FILE *fd = NULL;
+
+    // Reset errno to zero before calling fopen().
+    errno = 0;
+
+    // Lets open a file that does not exist   
+    fd = fopen("Linux.txt","r");
+    if(errno || (NULL == fd))
+    {
+        // Use strerror to display the error string
+        printf("\nThe function fopen failed due to : [%s]\n",(char*)strerror(errno));
+        return -1;
+    }
+
+    return 0;
+}</pre>
+<p>Now, if we execute the code above :</p>
+<pre>$ ./errno
+
+The function fopen failed due to : [<strong>No such file or directory</strong>]</pre>
+<p>So we see that the function strerror() returned a human readable string that clearly specified that fopen() failed as there is no such file or directory.</p>
+<p>One problem with strerror() is that it uses a common buffer to store the error message that is overwritten by subsequent calls to functions that fail and set errno. This could be a problem mostly in the multi threaded applications where a thread context switch could easily flush off the previously stored string that was to be used by the thread that was earlier under execution. To sort this problem out, there is a thread safe variant of this function known as strerror_r(). This function accepts a buffer as an argument that it fills with the error string and hence eliminates the problems faced in case of strerror() function.</p>
+<p>To learn more on strerror() and strerror_r() go through the man page of these functions.</p>
+<p>Now lets shift the focus on perror() function. Here is an excerpt of the description of this function from its man page :</p>
+<blockquote><p>#include &lt;stdio.h&gt;<br />
+void perror(const char *s);</p>
+<p>The routine perror() produces a message on the standard error output, describing the last error encountered during a call to a system or library function. First (if s is not NULL and *s is not a null byte (&#8216;\0&#8242;)) the argument string s is printed, followed by a colon and a blank. Then the message and a new-line.</p>
+<p>To be of most use, the argument string should include the name of the function that incurred the error. The error number is taken from the external variable errno, which is set when errors occur but not cleared when non-erroneous calls are made.</p></blockquote>
+<p>So we see that this function is different from strerror() family of functions as it produces the output on standard error and it also accepts an argument where the developer can provide an additional string to add more meaning to the error log that is to be printed by perror() function. Usually developers pass the name of function as argument so that name of the function gets printed along with the error string.</p>
+<p>Here is an example of perror() function :</p>
+<pre>#include&lt;stdio.h&gt;
+#include&lt;errno.h&gt;
+#include&lt;string.h&gt;
+
+int main(void)
+{
+    FILE *fd = NULL;
+
+    // Reset errno to zero before calling fopen().
+    errno = 0;
+
+    // Lets open a file that does not exist   
+    fd = fopen("Linux.txt","r");
+    if(errno || (NULL == fd))
+    {
+        // Use strerror to display the error string
+        perror("The function fopen failed due to");
+        return -1;
+    }
+
+    return 0;
+}</pre>
+<p>So we see that in the code above, we have used the perror() function and passed our own string as an argument to it. Now lets run this code, following is the output :</p>
+<pre>$ ./errno
+The function fopen failed due to: No such file or directory</pre>
+<p>So we see that the string supplied to the perror() function was printed first followed by a colon and then finally the error string corresponding to the error that occurred while processing fopen() function.</p>
+<h3>The man pages or the documentation of a function</h3>
+<p>This is a very healthy habit to first go through the complete help/documentation/man-page of a function. This not only provides an overview of the function but also provides detail information on how and why a particular function would fail, what it returns in different scenarios etc. More the knowledge of a function, better the error handling you can put around it in code.</p>
+<div class="sharedaddy sd-sharing-enabled"><div class="robots-nocontent sd-block sd-social sd-social-icon-text sd-sharing"><h3 class="sd-title">Share this:</h3><div class="sd-content"><ul><li class="share-linkedin"><a rel="nofollow" class="share-linkedin sd-button share-icon" href="http://mylinuxbook.com/error-handling-in-c-programming-on-linux/?share=linkedin"  title="Click to share on LinkedIn" id="sharing-linkedin-139"><span>LinkedIn</span></a></li><li class="share-reddit"><a rel="nofollow" class="share-reddit sd-button share-icon" href="http://mylinuxbook.com/error-handling-in-c-programming-on-linux/?share=reddit"  title="Click to share on Reddit"><span>Reddit</span></a></li><li class="share-stumbleupon"><a rel="nofollow" class="share-stumbleupon sd-button share-icon" href="http://mylinuxbook.com/error-handling-in-c-programming-on-linux/?share=stumbleupon"  title="Click to share on StumbleUpon"><span>StumbleUpon</span></a></li><li class="share-digg"><a rel="nofollow" class="share-digg sd-button share-icon" href="http://mylinuxbook.com/error-handling-in-c-programming-on-linux/?share=digg"  title="Click to Digg this post"><span>Digg</span></a></li><li class="share-tumblr"><a rel="nofollow" class="share-tumblr sd-button share-icon" href="http://mylinuxbook.com/error-handling-in-c-programming-on-linux/?share=tumblr"  title="Click to share on Tumblr"><span>Tumblr</span></a></li><li class="share-pinterest"><a rel="nofollow" class="share-pinterest sd-button share-icon" href="http://mylinuxbook.com/error-handling-in-c-programming-on-linux/?share=pinterest"  title="Click to share on Pinterest"><span>Pinterest</span></a></li><li class="share-end"></li></ul><div class="sharing-clear"></div></div></div></div></div><!-- #getsocialmain -->					</div><!-- .entry-content -->
+		
+		<footer class="entry-meta">
+		<span>Category: <a href="http://mylinuxbook.com/category/c-cpp-prog/" title="View all posts in C/C++" rel="category tag">C/C++</a> <a href="http://mylinuxbook.com/category/linux-devel/" title="View all posts in Linux Development" rel="category tag">Linux Development</a> <a href="http://mylinuxbook.com/category/linux-devel/user-space-devel/" title="View all posts in User space software development" rel="category tag">User space software development</a></span> <span>Tags: <a href="http://mylinuxbook.com/tag/c-language-error-handling/" rel="tag">C language error handling</a>, <a href="http://mylinuxbook.com/tag/errno/" rel="tag">errno</a>, <a href="http://mylinuxbook.com/tag/error-handling/" rel="tag">error handling</a>, <a href="http://mylinuxbook.com/tag/error-handling-in-c/" rel="tag">Error handling in C</a>, <a href="http://mylinuxbook.com/tag/linux-errno-variable/" rel="tag">Linux errno variable</a>, <a href="http://mylinuxbook.com/tag/linux-programming/" rel="tag">Linux programming</a>, <a href="http://mylinuxbook.com/tag/perror/" rel="tag">perror</a>, <a href="http://mylinuxbook.com/tag/perror-function/" rel="tag">perror function</a>, <a href="http://mylinuxbook.com/tag/strerror/" rel="tag">strerror</a>, <a href="http://mylinuxbook.com/tag/strerror-function/" rel="tag">strerror function</a></span> 
+           						</footer><!-- .entry-meta -->
+	</article><!-- #post -->
+				<nav class="nav-single">
+					<div class="assistive-text">Post navigation</div>
+					<span class="nav-previous"><a href="http://mylinuxbook.com/how-to-determine-gnu-c-library-glibc-version-on-linux-system/" rel="prev"><span class="meta-nav">&larr;</span> How to determine GNU C library glibc version on Linux system?</a></span>
+					<span class="nav-next"><a href="http://mylinuxbook.com/an-example-of-buffer-overflow-in-c-using-gets/" rel="next">An example of buffer overflow in C using gets() <span class="meta-nav">&rarr;</span></a></span>
+				</nav><!-- .nav-single -->
+
+				
+<div id="comments" class="comments-area">
+
+	
+	
+									<div id="respond" class="comment-respond">
+				<h3 id="reply-title" class="comment-reply-title">Leave a Reply <small><a rel="nofollow" id="cancel-comment-reply-link" href="/error-handling-in-c-programming-on-linux/#respond" style="display:none;">Cancel reply</a></small></h3>
+									<form action="http://mylinuxbook.com/wp-comments-post.php" method="post" id="commentform" class="comment-form">
+																			<p class="comment-notes">Your email address will not be published. Required fields are marked <span class="required">*</span></p>							<p class="comment-form-author"><label for="author">Name <span class="required">*</span></label> <input id="author" name="author" type="text" value="" size="30" aria-required='true' /></p>
+<p class="comment-form-email"><label for="email">Email <span class="required">*</span></label> <input id="email" name="email" type="text" value="" size="30" aria-required='true' /></p>
+<p class="comment-form-url"><label for="url">Website</label> <input id="url" name="url" type="text" value="" size="30" /></p>
+<img src='http://mylinuxbook.com/wp-admin/admin-ajax.php?action=easy-captcha-submit&easy_captcha_sid=44d74d1f07e5b2e35ec1096471ce53e1&easy_captcha_type=simple&call=getimiage&page=comments_form'><br /><label for='easy_captcha_captcha_simple'>Prove that you are a human!</label><br /><input type='text' id='easy_captcha_captcha_simple' name='easy_captcha_captcha_simple' value=''><input type='hidden' id='easy_captcha_sid' name='easy_captcha_sid' value='44d74d1f07e5b2e35ec1096471ce53e1'>												<p class="comment-form-comment"><label for="comment">Comment</label> <textarea id="comment" name="afcef-comment" cols="45" rows="8" aria-required="true"></textarea><textarea name="comment" style="display:none" rows="1" cols="1"></textarea></p>												<p class="form-submit">
+							<input name="submit" type="submit" id="submit" value="Post Comment" />
+							<input type='hidden' name='comment_post_ID' value='139' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+						</p>
+						<p class="comment-subscription-form"><input type="checkbox" name="subscribe_comments" id="subscribe_comments" value="subscribe" style="width: auto; -moz-appearance: checkbox; -webkit-appearance: checkbox;" /> <label class="subscribe-label" id="subscribe-label" for="subscribe_comments" style="display: inline;">Notify me of follow-up comments by email.</label></p><p class="comment-subscription-form"><input type="checkbox" name="subscribe_blog" id="subscribe_blog" value="subscribe" style="width: auto; -moz-appearance: checkbox; -webkit-appearance: checkbox;" /> <label class="subscribe-label" id="subscribe-blog-label" for="subscribe_blog" style="display: inline;">Notify me of new posts by email.</label></p>					</form>
+							</div><!-- #respond -->
+			        <script type="text/javascript">
+            jQuery(document).ready(function () {
+                jQuery('#commentform').submit(function () {
+                    _gaq.push(
+                            ['_setAccount', 'UA-36586508-1'],
+                            ['_trackEvent', 'comment', 'submit']
+                    );
+                });
+            });
+        </script>
+		
+</div><!-- #comments .comments-area -->
+			
+		</div><!-- #content -->
+	</div><!-- #primary -->
+
+
+			<div id="secondary" class="widget-area" role="complementary">
+			<aside id="text-13" class="widget widget_text">			<div class="textwidget"><script id="mNCC" language="javascript">  medianet_width='300';  medianet_height= '250';  medianet_crid='691801432';  </script>  <script id="mNSC" src="http://contextual.media.net/nmedianet.js?cid=8CUV583K1" language="javascript"></script> </div>
+		</aside><style type="text/css">
+#am_thumbnail a {
+text-decoration: none;
+border: none;
+}
+#am_thumbnail img {
+text-decoration: none;
+border: 1px solid #999;
+max-width: 99%;
+}
+#am_name {
+margin-top: 5px;
+margin-bottom: 3px;
+}
+#am_headline {
+margin-bottom: 5px;
+}
+#am_bio {
+margin-bottom: 15px;
+}
+#am_bio p {
+margin-bottom: 5px;
+}
+#am_bio p:last-child {
+margin-bottom: 0px;
+}
+#am_services {
+margin-right: -5px;
+}
+#am_services a.am_service_icon {
+margin-right: 4px;
+text-decoration: none;
+border: none;
+}
+#am_services a.am_service_icon:hover {
+text-decoration: none;
+border: none;
+}
+#am_services a.am_service_icon img {
+border: none;
+margin-bottom: 4px;
+}
+/*
+#am_links a.am_link_icon img {
+border: none;
+text-decoration: none;
+vertical-align: middle;
+}
+#am_links a.am_link_icon img:hover {
+text-decoration: none;
+border: none;
+}
+*/
+</style>
+<aside id="aboutme_widget-6" class="widget aboutme_widget"><p class="widget-title">about.me</p><div id="am_thumbnail"><a href="http://about.me/himanshuarora" target="_blank" rel="me"><img src="http://d13pix9kaak6wt.cloudfront.net/background/users/h/i/m/himanshuarora_1387366618_24.jpg" alt="Himanshu Arora"></a></div><h2 id="am_name"><a href="http://about.me/himanshuarora" style="font-size:large;" target="_blank" rel="me">Himanshu Arora</a></h2><div id="am_bio"><p><strong>Himanshu Arora</strong> is a software programmer, open source enthusiast and Linux researcher. He writes technical articles for various websites and blogs. Some of his articles have been featured on IBM developerworks, ComputerWorld and in Linux Journal. He is the administrator of <a href="http://mylinuxbook.com">MyLinuxBook</a> and also contributes useful posts on the blog. When he is not busy writing articles, he likes to explore various food joints in his city, explore new hill stations and party at weekends. You can catch him on <a href="https://plus.google.com/101707814349190065442?rel=author">Google+</a>.</p></div></aside><aside id="wysija-3" class="widget widget_wysija"><p class="widget-title">Subscribe to our Newsletter</p><div class="widget_wysija_cont"><div id="msg-form-wysija-3" class="wysija-msg ajax"></div><form id="form-wysija-3" method="post" data-version="2" action="#wysija" class="widget_wysija">
+<p>
+    <label for="">Email <span class="wysija-required">*</span></label>
+    <input type="text" name="wysija[user][email]" class="wysija-input validate[required,custom[email]]" title="Email"  value="" />
+    
+    <span class="abs-req">
+        <input type="text" name="wysija[user][abs][email]" class="wysija-input validated[abs][email]" value="" />
+    </span>
+    
+</p>
+<input class="wysija-submit wysija-submit-field" type="submit" value="Subscribe!" />
+
+    <input type="hidden" name="form_id" value="2" />
+    <input type="hidden" name="action" value="save" />
+    <input type="hidden" name="controller" value="subscribers" />
+    <input type="hidden" value="1" name="wysija-page" />
+
+    
+        <input type="hidden" name="wysija[user_list][list_ids]" value="1" />
+    
+    <input type="hidden" name="on_success" value="message" />
+    <input type="hidden" name="success_message" value="Q2hlY2sgeW91ciBpbmJveCBub3cgdG8gY29uZmlybSB5b3VyIHN1YnNjcmlwdGlvbi4=" />
+</form></div></aside><aside id="text-10" class="widget widget_text"><p class="widget-title">Follow MyLinuxBook on Google+</p>			<div class="textwidget"><!-- Place this tag where you want the widget to render. -->
+<div class="g-page" data-href="//plus.google.com/114190880072036298364" data-rel="publisher"></div>
+
+<!-- Place this tag after the last widget tag. -->
+<script type="text/javascript">
+  (function() {
+    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+    po.src = 'https://apis.google.com/js/plusone.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+  })();
+</script></div>
+		</aside><aside id="facebook-likebox-3" class="widget widget_facebook_likebox"><p class="widget-title"><a href="https://www.facebook.com/MyLinuxBook">Follow MyLinuxBook On Facebook</a></p><iframe src="http://www.facebook.com/plugins/likebox.php?href=https%3A%2F%2Fwww.facebook.com%2FMyLinuxBook&#038;width=300&#038;height=432&#038;colorscheme=light&#038;show_faces=true&#038;stream=false&#038;header=false&#038;force_wall=false" scrolling="no" frameborder="0" style="border: none; overflow: hidden; width: 300px;  height: 432px; background: #fff"></iframe></aside><aside id="categories-3" class="widget widget_categories"><p class="widget-title">Search Article Categories</p><select name='cat' id='cat' class='postform' >
+	<option value='-1'>Select Category</option>
+	<option class="level-0" value="464">Best of net&nbsp;&nbsp;(1)</option>
+	<option class="level-0" value="17">C/C++&nbsp;&nbsp;(11)</option>
+	<option class="level-0" value="7">Linux administration&nbsp;&nbsp;(63)</option>
+	<option class="level-1" value="479">&nbsp;&nbsp;&nbsp;Bash Shell&nbsp;&nbsp;(1)</option>
+	<option class="level-1" value="12">&nbsp;&nbsp;&nbsp;Boot and shut process&nbsp;&nbsp;(1)</option>
+	<option class="level-1" value="214">&nbsp;&nbsp;&nbsp;CommandLineTips&nbsp;&nbsp;(19)</option>
+	<option class="level-1" value="8">&nbsp;&nbsp;&nbsp;Commands&nbsp;&nbsp;(29)</option>
+	<option class="level-1" value="10">&nbsp;&nbsp;&nbsp;File system&nbsp;&nbsp;(1)</option>
+	<option class="level-1" value="218">&nbsp;&nbsp;&nbsp;HowTo&nbsp;&nbsp;(7)</option>
+	<option class="level-1" value="9">&nbsp;&nbsp;&nbsp;Networking and Security&nbsp;&nbsp;(8)</option>
+	<option class="level-1" value="210">&nbsp;&nbsp;&nbsp;Shell&nbsp;&nbsp;(4)</option>
+	<option class="level-1" value="188">&nbsp;&nbsp;&nbsp;Software tools&nbsp;&nbsp;(5)</option>
+	<option class="level-0" value="222">Linux concepts&nbsp;&nbsp;(3)</option>
+	<option class="level-0" value="4">Linux Development&nbsp;&nbsp;(22)</option>
+	<option class="level-1" value="5">&nbsp;&nbsp;&nbsp;Kernel Development&nbsp;&nbsp;(4)</option>
+	<option class="level-1" value="6">&nbsp;&nbsp;&nbsp;User space software development&nbsp;&nbsp;(16)</option>
+	<option class="level-0" value="383">Linux games&nbsp;&nbsp;(2)</option>
+	<option class="level-0" value="339">Linux Vim editor&nbsp;&nbsp;(2)</option>
+	<option class="level-0" value="310">Market News&nbsp;&nbsp;(6)</option>
+	<option class="level-0" value="487">Obscure applications&nbsp;&nbsp;(46)</option>
+	<option class="level-0" value="248">Open source software&nbsp;&nbsp;(10)</option>
+	<option class="level-0" value="667">operating system&nbsp;&nbsp;(1)</option>
+	<option class="level-0" value="15">Scripting&nbsp;&nbsp;(1)</option>
+	<option class="level-1" value="16">&nbsp;&nbsp;&nbsp;Bash scripting&nbsp;&nbsp;(1)</option>
+	<option class="level-0" value="642">Tech innovation&nbsp;&nbsp;(1)</option>
+	<option class="level-0" value="119">Ubuntu&nbsp;&nbsp;(10)</option>
+	<option class="level-0" value="1">Uncategorized&nbsp;&nbsp;(1)</option>
+	<option class="level-0" value="212">Video&nbsp;&nbsp;(1)</option>
+	<option class="level-0" value="643">Virtual Currency&nbsp;&nbsp;(1)</option>
+</select>
+
+<script type='text/javascript'>
+/* <![CDATA[ */
+	var dropdown = document.getElementById("cat");
+	function onCatChange() {
+		if ( dropdown.options[dropdown.selectedIndex].value > 0 ) {
+			location.href = "http://mylinuxbook.com/?cat="+dropdown.options[dropdown.selectedIndex].value;
+		}
+	}
+	dropdown.onchange = onCatChange;
+/* ]]> */
+</script>
+
+</aside><aside id="text-12" class="widget widget_text"><p class="widget-title">Follow MyLinuxBook On Twitter</p>			<div class="textwidget"><a href="https://twitter.com/my_linux_book" onclick="javascript:_gaq.push(['_trackEvent','outbound-widget','http://twitter.com']);" class="twitter-follow-button" data-show-count="false" data-show-screen-name="false" data-dnt="true">Follow @my_linux_book</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script></div>
+		</aside><aside id="rss_links-2" class="widget widget_rss_links"><p class="widget-title">Grab The RSS Feed</p><p><a href="http://mylinuxbook.com/feed/" title="Subscribe to Posts"><img src="http://mylinuxbook.com/wp-content/plugins/jetpack/_inc/images/rss/orange-large.png" alt="RSS Feed" /></a></p>
+</aside><aside id="text-11" class="widget widget_text">			<div class="textwidget"><script id="mNCC" language="javascript">  medianet_width='300';  medianet_height= '600';  medianet_crid='712494418';  </script>  <script id="mNSC" src="http://contextual.media.net/nmedianet.js?cid=8CUV583K1" language="javascript"></script> </div>
+		</aside>		</div><!-- #secondary -->
+		</div><!-- #main .wrapper -->
+	<footer id="colophon" role="contentinfo">
+		<div class="site-info">
+		<div class="footercopy">Copyright 2013</div>
+		<div class="footercredit">Custom Text Right</div>
+		</div><!-- .site-info -->
+		</footer><!-- #colophon -->
+		<div class="site-wordpress">
+				<!--a href="http://themonic.com/iconic-one/">Iconic One</a--> <!--a href="http://wordpress.org">Wordpress</a-->
+				</div><!-- .site-info -->
+				<div class="clear"></div>
+</div><!-- #page -->
+
+<div id="spu-bg"></div>
+			<div id="spu-main"><a href="#" onClick="spuFlush(1);" id="spu-close">Close</a><div id="spu-title">Please support MyLinuxBook</div>
+<div id="spu-msg-cont">
+     <div id="spu-msg">
+     Let your friends and followers know about MyLinuxBook</br>
+     <h3>Twitter <div class="spu-button spu-twitter"><a href="https://twitter.com/my_linux_book" class="twitter-follow-button" data-show-count="false" data-size="large">Follow Me</a></div> </h3>
+    <h3> Facebook <div class="spu-button spu-facebook"><div id="fb-root"></div><fb:like href="https://www.facebook.com/MyLinuxBook" send="false"  show_faces="false" data-layout="button_count"></fb:like></div> </h3>
+     <h3>Google+ <div class="spu-button spu-google"><div class="g-plusone" data-callback="googleCB" data-action="share" data-annotation="bubble" data-height="24" data-href="https://plus.google.com/114190880072036298364"></div></div> </h3>
+     </div>
+    <div class="step-clear"></div>
+</div></div>	<div style="display:none">
+	</div>
+
+	<script type="text/javascript">
+		WPCOM_sharing_counts = {"http:\/\/mylinuxbook.com\/error-handling-in-c-programming-on-linux\/":139}	</script>
+<script type='text/javascript' src='http://mylinuxbook.com/wp-content/plugins/jetpack/modules/sharedaddy/sharing.js?ver=20121205'></script>
+		<script type="text/javascript">
+		jQuery(document).on( 'ready post-load', function(){
+			jQuery( 'a.share-linkedin' ).on( 'click', function() {
+				window.open( jQuery(this).attr( 'href' ), 'wpcomlinkedin', 'menubar=1,resizable=1,width=580,height=450' );
+				return false;
+			});
+		});
+		</script>
+				<script type="text/javascript">
+		jQuery(document).on( 'ready post-load', function(){
+			jQuery( 'a.share-tumblr' ).on( 'click', function() {
+				window.open( jQuery(this).attr( 'href' ), 'wpcomtumblr', 'menubar=1,resizable=1,width=450,height=450' );
+				return false;
+			});
+		});
+		</script>
+							<script type="text/javascript">
+			jQuery(document).on('ready', function(){
+				jQuery('body').on('click', 'a.share-pinterest', function(e){
+					e.preventDefault();
+
+					// Load Pinterest Bookmarklet code
+					var s = document.createElement("script");
+					s.type = "text/javascript";
+					s.src = window.location.protocol + "//assets.pinterest.com/js/pinmarklet.js?r=" + ( Math.random() * 99999999 );
+					var x = document.getElementsByTagName("script")[0];
+					x.parentNode.insertBefore(s, x);
+
+					// Trigger Stats
+					var s = document.createElement("script");
+					s.type = "text/javascript";
+					s.src = this + ( this.toString().indexOf( '?' ) ? '&' : '?' ) + 'js_only=1';
+					var x = document.getElementsByTagName("script")[0];
+					x.parentNode.insertBefore(s, x);
+				});
+			});
+			</script>
+		<script type='text/javascript' src='http://mylinuxbook.com/wp-content/plugins/wysija-newsletters/js/validate/languages/jquery.validationEngine-en.js?ver=2.4.2'></script>
+<script type='text/javascript' src='http://mylinuxbook.com/wp-content/plugins/wysija-newsletters/js/validate/jquery.validationEngine.js?ver=2.4.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var wysijaAJAX = {"action":"wysija_ajax","controller":"subscribers","ajaxurl":"http:\/\/mylinuxbook.com\/wp-admin\/admin-ajax.php","loadingTrans":"Loading..."};
+/* ]]> */
+</script>
+<script type='text/javascript' src='http://mylinuxbook.com/wp-content/plugins/wysija-newsletters/js/front-subscribers.js?ver=2.4.2'></script>
+<script type='text/javascript' src='http://s0.wp.com/wp-content/js/devicepx-jetpack.js?ver=201426'></script>
+<script type='text/javascript' src='http://s.gravatar.com/js/gprofiles.js?ver=2014Junaa'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var WPGroHo = {"my_hash":""};
+/* ]]> */
+</script>
+<script type='text/javascript' src='http://mylinuxbook.com/wp-content/plugins/jetpack/modules/wpgroho.js?ver=3.8.1'></script>
+<script type='text/javascript' src='http://mylinuxbook.com/wp-content/themes/iconic-one/js/selectnav.js?ver=1.0'></script>
+
+	<script src="http://stats.wordpress.com/e-201426.js" type="text/javascript"></script>
+	<script type="text/javascript">
+	st_go({v:'ext',j:'1:2.2',blog:'39952495',post:'139',tz:'5.5'});
+	var load_cmc = function(){linktracker_init(39952495,139,2);};
+	if ( typeof addLoadEvent != 'undefined' ) addLoadEvent(load_cmc);
+	else load_cmc();
+	</script></body>
+</html>
